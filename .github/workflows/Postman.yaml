@@ -21,14 +21,21 @@ jobs:
       - name: Make Directory for results
         run: mkdir -p docs
       - name: Check for collection file
-        run: ls -la # this will list all files in current directory, to check for collection file.
+        run: ls -la
       - name: Run POSTMAN collection
         run: |
           newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export docs/index.html || true
       - name: Check for HTML report
-        run: ls -la docs # this will list all files in the docs directory, to check for index.html.
+        run: ls -la docs
       - name: Print out HTML report
-        run: cat docs/index.html # this will print out the contents of index.html.
+        run: cat docs/index.html
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: '.' # The directory where your Jekyll site is located. Adjust this as necessary.
+          destination: './_site' # The directory where the built site will be placed. Adjust this as necessary.
+          future: true # Set this to true to include posts with a future date.
+          build_revision: ${{ github.sha }} # The Git revision to build.
       - name: Output the run Details
         uses: actions/upload-artifact@v2
         with:

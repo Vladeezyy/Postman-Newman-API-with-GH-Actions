@@ -18,17 +18,11 @@ jobs:
         run: |
           npm install -g newman
           npm install -g newman-reporter-htmlextra
-      - name: Make Directory for results
-        run: mkdir -p docs
-      - name: Check for collection file
-        run: ls -la
+      
       - name: Run POSTMAN collection
         run: |
           newman run petstore.collection.json -r htmlextra --reporter-htmlextra-export docs/index.html || true
-      - name: Check for HTML report
-        run: ls -la docs
-      - name: Print out HTML report
-        run: cat docs/index.html
+
       - name: Add, commit and push changes
         run: |
           git config --local user.email "action@github.com"
@@ -36,6 +30,7 @@ jobs:
           git add docs/index.html
           git commit -m "Add generated index.html" -a
           git push https://${{secrets.TEST_SECRET}}@github.com/${{github.repository}}.git HEAD:main
+    
       - name: Output the run Details
         uses: actions/upload-artifact@v2
         with:

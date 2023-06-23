@@ -29,13 +29,13 @@ jobs:
         run: ls -la docs
       - name: Print out HTML report
         run: cat docs/index.html
-      - name: Build Jekyll site
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: '.' # The directory where your Jekyll site is located. Adjust this as necessary.
-          destination: './_site' # The directory where the built site will be placed. Adjust this as necessary.
-          future: true # Set this to true to include posts with a future date.
-          build_revision: ${{ github.sha }} # The Git revision to build.
+      - name: Add, commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/index.html
+          git commit -m "Add generated index.html" -a
+          git push https://${{secrets.TEST_SECRET}}@github.com/${{github.repository}}.git HEAD:main
       - name: Output the run Details
         uses: actions/upload-artifact@v2
         with:
